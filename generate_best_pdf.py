@@ -1,11 +1,10 @@
 import os
-import sys
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.units import inch
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import (
-    SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak, KeepTogether, HRFlowable
+    SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak, HRFlowable
 )
 from reportlab.pdfgen import canvas
 
@@ -28,14 +27,14 @@ class ProfessionalCanvas(canvas.Canvas):
 
     def draw_page_decorations(self, page_count):
         self.saveState()
-        # Running header (for page 2 onwards)
+        # Running header (pages 2+)
         if self._pageNumber > 1:
             self.setFont("Helvetica-Bold", 8)
             self.setFillColor(colors.HexColor("#2B6CB0"))
             self.drawString(54, letter[1] - 36, "HEALTHCARE MANAGEMENT SYSTEM REST API")
             self.setFont("Helvetica", 8)
             self.setFillColor(colors.HexColor("#718096"))
-            self.drawRightString(letter[0] - 54, letter[1] - 36, "Technical Project Report")
+            self.drawRightString(letter[0] - 54, letter[1] - 36, "Technical Architecture Report")
             self.setStrokeColor(colors.HexColor("#CBD5E0"))
             self.setLineWidth(0.75)
             self.line(54, letter[1] - 42, letter[0] - 54, letter[1] - 42)
@@ -65,85 +64,72 @@ def build_pdf():
 
     styles = getSampleStyleSheet()
 
-    # Colors
+    # Brand Colors
     c_primary = colors.HexColor("#1A365D")    # Deep Navy
-    c_secondary = colors.HexColor("#2B6CB0")  # Rich Royal Blue
-    c_accent = colors.HexColor("#319795")     # Teal Accent
-    c_dark = colors.HexColor("#2D3748")       # Body Text Charcoal
+    c_secondary = colors.HexColor("#2B6CB0")  # Royal Blue
+    c_dark = colors.HexColor("#2D3748")       # Charcoal
     c_light_bg = colors.HexColor("#F7FAFC")   # Soft Off-white
-    c_blue_tint = colors.HexColor("#EBF8FF")  # Soft Blue Tint
-    c_border = colors.HexColor("#CBD5E0")     # Subtle Border
+    c_blue_tint = colors.HexColor("#EBF8FF")  # Ice Blue Tint
+    c_border = colors.HexColor("#CBD5E0")     # Border Grey
 
-    # Typography
     main_title = ParagraphStyle(
         'MainTitle',
         parent=styles['Normal'],
         fontName='Helvetica-Bold',
-        fontSize=24,
-        leading=30,
+        fontSize=23,
+        leading=28,
         textColor=c_primary,
-        spaceAfter=6
+        spaceAfter=5
     )
 
     sub_title = ParagraphStyle(
         'SubTitle',
         parent=styles['Normal'],
         fontName='Helvetica-Bold',
-        fontSize=13,
-        leading=18,
+        fontSize=12.5,
+        leading=17,
         textColor=c_secondary,
-        spaceAfter=14
+        spaceAfter=12
     )
 
     sec_title = ParagraphStyle(
         'SectionHeading',
         parent=styles['Normal'],
         fontName='Helvetica-Bold',
-        fontSize=13,
-        leading=17,
+        fontSize=12,
+        leading=16,
         textColor=c_primary,
-        spaceBefore=12,
-        spaceAfter=6
-    )
-
-    subsec_title = ParagraphStyle(
-        'SubSectionHeading',
-        parent=styles['Normal'],
-        fontName='Helvetica-Bold',
-        fontSize=10.5,
-        leading=14,
-        textColor=c_secondary,
-        spaceBefore=8,
-        spaceAfter=4
+        spaceBefore=11,
+        spaceAfter=5
     )
 
     body = ParagraphStyle(
         'BodyDark',
         parent=styles['Normal'],
         fontName='Helvetica',
-        fontSize=9.2,
-        leading=13.8,
+        fontSize=8.8,
+        leading=13.2,
         textColor=c_dark,
-        spaceAfter=5
+        spaceAfter=4
     )
 
     bullet = ParagraphStyle(
         'BulletDark',
         parent=styles['Normal'],
         fontName='Helvetica',
-        fontSize=9,
-        leading=13.2,
+        fontSize=8.6,
+        leading=12.8,
         textColor=c_dark,
         leftIndent=12,
-        spaceAfter=3.5
+        spaceAfter=3
     )
 
-    code_box = ParagraphStyle(
-        'CodeStyle',
+    code_font = ParagraphStyle(
+        'CodeFont',
         parent=styles['Normal'],
         fontName='Courier',
-        fontSize=7.8,
-        leading=10.5,
+        fontSize=8,
+        leading=11.5,
         textColor=colors.HexColor("#1A202C")
     )
 
@@ -160,7 +146,7 @@ def build_pdf():
         'TableCell',
         parent=styles['Normal'],
         fontName='Helvetica',
-        fontSize=8.2,
+        fontSize=8,
         leading=11,
         textColor=c_dark
     )
@@ -169,17 +155,17 @@ def build_pdf():
         'TableCellBold',
         parent=styles['Normal'],
         fontName='Helvetica-Bold',
-        fontSize=8.2,
+        fontSize=8,
         leading=11,
         textColor=colors.HexColor("#1A202C")
     )
 
     story = []
 
-    # ==================== COVER BANNER ====================
+    # ==================== COVER HEADER ====================
     story.append(Paragraph("Healthcare Management System REST API", main_title))
     story.append(Paragraph("Enterprise Software Engineering Project Report & Architecture Guide", sub_title))
-    story.append(HRFlowable(width="100%", thickness=2.5, color=c_secondary, spaceAfter=10))
+    story.append(HRFlowable(width="100%", thickness=2.5, color=c_secondary, spaceAfter=8))
 
     meta_table_data = [
         [Paragraph("<b>Project Author:</b> Nandennagari Haasini", tc), Paragraph("<b>Target Environment:</b> Java 21 / Spring Boot 4.1.x", tc)],
@@ -191,70 +177,68 @@ def build_pdf():
         ('BACKGROUND', (0, 0), (-1, -1), c_blue_tint),
         ('BOX', (0, 0), (-1, -1), 1, c_secondary),
         ('INNERGRID', (0, 0), (-1, -1), 0.5, c_border),
-        ('TOPPADDING', (0, 0), (-1, -1), 4),
-        ('BOTTOMPADDING', (0, 0), (-1, -1), 4),
+        ('TOPPADDING', (0, 0), (-1, -1), 3.5),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 3.5),
         ('LEFTPADDING', (0, 0), (-1, -1), 8),
         ('RIGHTPADDING', (0, 0), (-1, -1), 8),
     ]))
     story.append(t_meta)
-    story.append(Spacer(1, 10))
+    story.append(Spacer(1, 8))
 
     # ==================== 1. PROJECT OVERVIEW ====================
     story.append(Paragraph("1. Project Overview", sec_title))
     story.append(Paragraph(
-        "The <b>Healthcare Management System REST API</b> is an enterprise-grade backend service engineered to modernize "
-        "and digitize operations in hospitals, clinics, and outpatient healthcare networks. It provides a robust, centralized, "
-        "and decoupled platform for managing the entire patient care lifecycle across six critical business domains: "
+        "The <b>Healthcare Management System REST API</b> is an enterprise-grade backend service engineered to modernize and "
+        "digitize operations in hospitals, clinics, and outpatient healthcare networks. It provides a robust, centralized, and "
+        "decoupled platform for managing the entire patient care lifecycle across six critical business domains: "
         "<b>Patients, Doctors, Appointments, Prescriptions, Medical Records, and Billing</b>.",
         body
     ))
     story.append(Paragraph(
         "<b>Problem Statement:</b> Traditional healthcare administration relies on disparate systems—paper files, isolated billing "
         "spreadsheets, and disconnected scheduling registers. This creates critical operational bottlenecks: patient history "
-        "fragmentation, consultation scheduling conflicts, unfulfilled prescriptions, and revenue leakages. "
+        "fragmentation, consultation scheduling conflicts, unfulfilled prescriptions, and revenue leakages.<br/>"
         "<b>Solution:</b> This project establishes a unified, transaction-safe RESTful API adhering to industry-standard "
         "HTTP methods, strict relational integrity via Spring Data JPA, automated data validation, and real-time Swagger documentation.",
         body
     ))
-    story.append(Spacer(1, 6))
+    story.append(Spacer(1, 4))
 
     # ==================== 2. FUNCTIONAL MODULES ====================
     story.append(Paragraph("2. Functional Modules", sec_title))
-    story.append(Paragraph(
-        "The architecture is organized around six autonomous yet interconnected functional modules:", body
-    ))
+    story.append(Paragraph("The architecture is organized around six autonomous yet interconnected functional modules:", body))
 
     modules_data = [
         [Paragraph("Module", th), Paragraph("Primary Responsibilities", th), Paragraph("Key Endpoints", th)],
         [
             Paragraph("<b>Patient Management</b>", tc_bold),
             Paragraph("Patient onboarding, demographics tracking, contact details, and admission timeline.", tc),
-            Paragraph("<code>/api/patients<br/>GET, POST, PUT, DELETE</code>", tc)
+            Paragraph("<code>/api/patients</code><br/>GET, POST, PUT, DELETE", tc)
         ],
         [
             Paragraph("<b>Doctor Management</b>", tc_bold),
             Paragraph("Directory of medical staff, departmental specialization, phone, and professional email.", tc),
-            Paragraph("<code>/api/doctors<br/>GET, POST, PUT, DELETE</code>", tc)
+            Paragraph("<code>/api/doctors</code><br/>GET, POST, PUT, DELETE", tc)
         ],
         [
             Paragraph("<b>Appointment Scheduling</b>", tc_bold),
             Paragraph("Relational nexus linking patient and doctor; enforces future date and entity existence validation.", tc),
-            Paragraph("<code>/api/appointments<br/>GET, POST, PUT, DELETE</code>", tc)
+            Paragraph("<code>/api/appointments</code><br/>GET, POST, PUT, DELETE", tc)
         ],
         [
             Paragraph("<b>Prescription Issuance</b>", tc_bold),
             Paragraph("1:1 clinical prescription generated per appointment; records medication name, dosage, and intake advice.", tc),
-            Paragraph("<code>/api/prescriptions<br/>GET, POST, PUT, DELETE</code>", tc)
+            Paragraph("<code>/api/prescriptions</code><br/>GET, POST, PUT, DELETE", tc)
         ],
         [
             Paragraph("<b>Medical Records (EHR)</b>", tc_bold),
             Paragraph("Cumulative electronic health records, clinical diagnoses, and prescribed treatments linked to patients.", tc),
-            Paragraph("<code>/api/records<br/>GET, POST, PUT, DELETE</code>", tc)
+            Paragraph("<code>/api/records</code><br/>GET, POST, PUT, DELETE", tc)
         ],
         [
             Paragraph("<b>Billing & Invoicing</b>", tc_bold),
             Paragraph("1:1 financial invoices per consultation tracking invoice amount, payment status, and timestamp.", tc),
-            Paragraph("<code>/api/billing<br/>GET, POST, PUT, DELETE</code>", tc)
+            Paragraph("<code>/api/billing</code><br/>GET, POST, PUT, DELETE", tc)
         ]
     ]
     t_mod = Table(modules_data, colWidths=[1.8 * inch, 3.4 * inch, 1.8 * inch])
@@ -262,8 +246,8 @@ def build_pdf():
         ('BACKGROUND', (0, 0), (-1, 0), c_secondary),
         ('GRID', (0, 0), (-1, -1), 0.5, c_border),
         ('ROWBACKGROUNDS', (0, 1), (-1, -1), [c_light_bg, colors.white]),
-        ('TOPPADDING', (0, 0), (-1, -1), 4),
-        ('BOTTOMPADDING', (0, 0), (-1, -1), 4),
+        ('TOPPADDING', (0, 0), (-1, -1), 3.5),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 3.5),
         ('VALIGN', (0, 0), (-1, -1), 'TOP'),
     ]))
     story.append(t_mod)
@@ -285,17 +269,17 @@ def build_pdf():
         [Paragraph("API Documentation", tc_bold), Paragraph("Springdoc OpenAPI 2.8.6", tc), Paragraph("Dynamic OpenAPI 3 schema and live, interactive browser-based Swagger UI.", tc)],
         [Paragraph("API Testing", tc_bold), Paragraph("Postman Tool", tc), Paragraph("Collection-based test automation, request payloads, and status code verification.", tc)]
     ]
-    t_tech = Table(tech_table_data, colWidths=[1.5 * inch, 2.2 * inch, 3.3 * inch])
+    t_tech = Table(tech_table_data, colWidths=[1.4 * inch, 2.2 * inch, 3.4 * inch])
     t_tech.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), c_secondary),
         ('GRID', (0, 0), (-1, -1), 0.5, c_border),
         ('ROWBACKGROUNDS', (0, 1), (-1, -1), [c_light_bg, colors.white]),
-        ('TOPPADDING', (0, 0), (-1, -1), 3.5),
-        ('BOTTOMPADDING', (0, 0), (-1, -1), 3.5),
+        ('TOPPADDING', (0, 0), (-1, -1), 3),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 3),
         ('VALIGN', (0, 0), (-1, -1), 'TOP'),
     ]))
     story.append(t_tech)
-    story.append(Spacer(1, 8))
+    story.append(Spacer(1, 6))
 
     # ==================== 4. EXTERNAL DEPENDENCIES ====================
     story.append(Paragraph("4. External Dependencies", sec_title))
@@ -313,41 +297,51 @@ def build_pdf():
     for d in dep_bullets:
         story.append(Paragraph(d, bullet))
 
-    story.append(Spacer(1, 8))
+    story.append(Spacer(1, 6))
 
-    # ==================== 5. ARCHITECTURE ====================
+    # ==================== 5. ARCHITECTURE (CLEAN VECTOR TABLE) ====================
     story.append(Paragraph("5. Architecture", sec_title))
-    story.append(Paragraph("The system follows a strict <b>Layered Architecture Pattern</b> with separation of concerns:", body))
+    story.append(Paragraph("The system implements a strict Layered Architecture Pattern with clean Separation of Concerns:", body))
 
-    arch_diagram = """
-   ┌─────────────────────────────────────────────────────────────────────────────┐
-   │                       CLIENT LAYER (Postman / Browser / Swagger UI)         │
-   └───────────────────────────────────────┬─────────────────────────────────────┘
-                                           │ HTTP Request (JSON Payload + Basic Auth)
-                                           ▼
-   ┌─────────────────────────────────────────────────────────────────────────────┐
-   │ CONTROLLER LAYER: @RestController, @RequestMapping, @Valid                   │
-   │ PatientController | DoctorController | AppointmentController | Billing etc. │
-   └───────────────────────────────────────┬─────────────────────────────────────┘
-                                           │ Validated Domain Entities / DTOs
-                                           ▼
-   ┌─────────────────────────────────────────────────────────────────────────────┐
-   │ SERVICE LAYER: @Service, Business Validation, Transaction Boundaries         │
-   │ PatientService | DoctorService | AppointmentService | PrescriptionService   │
-   └───────────────────────────────────────┬─────────────────────────────────────┘
-                                           │ Spring Data JPA Method Invocations
-                                           ▼
-   ┌─────────────────────────────────────────────────────────────────────────────┐
-   │ REPOSITORY LAYER: JpaRepository<T, ID>, Derived Queries, ORM Mapping        │
-   │ PatientRepository | DoctorRepository | AppointmentRepository etc.           │
-   └───────────────────────────────────────┬─────────────────────────────────────┘
-                                           │ SQL Execution via HikariCP Pool
-                                           ▼
-   ┌─────────────────────────────────────────────────────────────────────────────┐
-   │ DATABASE LAYER: Relational Tables (patients, doctors, appointments, etc.)   │
-   └─────────────────────────────────────────────────────────────────────────────┘
-    """
-    story.append(Paragraph(f"<pre>{arch_diagram}</pre>", code_box))
+    # Table-based architecture diagram (NO box drawing Unicode characters)
+    arch_flow_data = [
+        [Paragraph("<b>TIER</b>", th), Paragraph("<b>COMPONENTS IN PROJECT</b>", th), Paragraph("<b>DATA / PROTOCOL FLOW</b>", th)],
+        [
+            Paragraph("<b>Client Tier</b>", tc_bold),
+            Paragraph("Postman API Client, Web Browsers, Swagger UI", tc),
+            Paragraph("HTTP Requests with JSON payloads & Basic Auth header", tc)
+        ],
+        [
+            Paragraph("<b>Controller Tier</b>", tc_bold),
+            Paragraph("PatientController, DoctorController, AppointmentController, PrescriptionController, MedicalRecordController, BillingController", tc),
+            Paragraph("Handles HTTP verbs (GET, POST, PUT, DELETE), validates payloads with @Valid, returns ResponseEntity", tc)
+        ],
+        [
+            Paragraph("<b>Service Tier</b>", tc_bold),
+            Paragraph("PatientService, DoctorService, AppointmentService, PrescriptionService, MedicalRecordService, BillingService", tc),
+            Paragraph("Executes business rules, validates foreign key existence, manages transactional boundaries", tc)
+        ],
+        [
+            Paragraph("<b>Repository Tier</b>", tc_bold),
+            Paragraph("PatientRepository, DoctorRepository, AppointmentRepository, PrescriptionRepository, MedicalRecordRepository, BillingRepository", tc),
+            Paragraph("Spring Data JPA / Hibernate proxy repositories executing derived queries and automated CRUD", tc)
+        ],
+        [
+            Paragraph("<b>Database Tier</b>", tc_bold),
+            Paragraph("Relational Tables: patients, doctors, appointments, prescriptions, medical_records, billing", tc),
+            Paragraph("Enforces Primary Keys, Unique Constraints (1:1), and Foreign Key Referential Integrity", tc)
+        ]
+    ]
+    t_arch = Table(arch_flow_data, colWidths=[1.3 * inch, 3.1 * inch, 2.6 * inch])
+    t_arch.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), c_primary),
+        ('GRID', (0, 0), (-1, -1), 0.5, c_border),
+        ('ROWBACKGROUNDS', (0, 1), (-1, -1), [c_light_bg, colors.white]),
+        ('TOPPADDING', (0, 0), (-1, -1), 3.5),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 3.5),
+        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+    ]))
+    story.append(t_arch)
     story.append(Spacer(1, 4))
     story.append(Paragraph(
         "<b>Entity Relationships:</b> Patient (1:M) Appointment | Doctor (1:M) Appointment | Appointment (1:1) Prescription | "
@@ -361,41 +355,36 @@ def build_pdf():
     story.append(Paragraph("6. Folder Structure", sec_title))
     story.append(Paragraph("Clean package hierarchy organized by architectural layer:", body))
 
-    fs_diagram = """
-D:\\Healthcare project
-│
-├── .git/                                    # Git repository metadata
-├── Healthcare_Management_System_Documentation.pdf # Generated technical reference PDF
-├── PROJECT_DOCUMENTATION.md                 # Technical project documentation
-├── UPLOAD_TO_GITHUB.bat                     # 1-Click interactive GitHub sync tool
-│
-├── postman/                                 # Postman workspace & collections
-│   └── collections/Healthcare REST API/     # YAML requests for all 6 modules
-│
-└── healthcare/                              # Spring Boot Application Root
-    ├── pom.xml                              # Maven build descriptor & dependencies
-    ├── mvnw / mvnw.cmd                      # Cross-platform Maven wrappers
-    ├── README.md & INTERVIEW_GUIDE.md       # Project overview & interview Q&A
-    │
-    └── src/main/java/com/example/healthcare/
-        ├── HealthcareApplication.java       # Spring Boot main entry point
-        ├── config/
-        │   ├── SecurityConfig.java          # Basic Auth & Swagger permitAll rules
-        │   └── DataInitializer.java         # Automated database seeder (Dr. Haasini ID: 3)
-        ├── controller/                      # 6 REST API Controllers (@RestController)
-        ├── service/                         # 6 Business Service classes (@Service)
-        ├── repository/                      # 6 JPA Repositories (JpaRepository)
-        ├── entity/                          # 6 Relational Entities (@Entity)
-        └── exception/                       # GlobalExceptionHandler & ResourceNotFoundException
-    """
-    story.append(Paragraph(f"<pre>{fs_diagram}</pre>", code_box))
+    fs_table_data = [
+        [Paragraph("Directory / File", th), Paragraph("Type", th), Paragraph("Purpose in Project", th)],
+        [Paragraph("<code>healthcare/pom.xml</code>", tc_bold), Paragraph("Maven XML", tc), Paragraph("Build descriptor, Java 21 specification, and all starter dependencies", tc)],
+        [Paragraph("<code>healthcare/mvnw, mvnw.cmd</code>", tc_bold), Paragraph("Maven Wrapper", tc), Paragraph("Cross-platform build scripts enabling zero-install compilation", tc)],
+        [Paragraph("<code>config/SecurityConfig.java</code>", tc_bold), Paragraph("Spring Security", tc), Paragraph("Configures Basic Auth (admin/admin123) and Swagger permitAll rules", tc)],
+        [Paragraph("<code>config/DataInitializer.java</code>", tc_bold), Paragraph("Startup Runner", tc), Paragraph("Seeds default doctors (Dr. Sarah Smith [1], Dr. John Doe [2], Dr. Haasini [3])", tc)],
+        [Paragraph("<code>controller/*.java (6 files)</code>", tc_bold), Paragraph("REST Controllers", tc), Paragraph("Handles REST endpoints for Patient, Doctor, Appointment, Prescription, Record, Billing", tc)],
+        [Paragraph("<code>service/*.java (6 files)</code>", tc_bold), Paragraph("Business Services", tc), Paragraph("Contains business logic, existence verification, and CRUD operations", tc)],
+        [Paragraph("<code>repository/*.java (6 files)</code>", tc_bold), Paragraph("JPA Repositories", tc), Paragraph("Data access interfaces extending JpaRepository<T, Long>", tc)],
+        [Paragraph("<code>entity/*.java (6 files)</code>", tc_bold), Paragraph("JPA Entities", tc), Paragraph("Relational table mappings with Jakarta validation constraints", tc)],
+        [Paragraph("<code>exception/*.java (2 files)</code>", tc_bold), Paragraph("Error Handling", tc), Paragraph("GlobalExceptionHandler (@ControllerAdvice) and ResourceNotFoundException", tc)],
+        [Paragraph("<code>resources/application.properties</code>", tc_bold), Paragraph("Properties", tc), Paragraph("Configures port 8080, in-memory H2 database, and MySQL credentials", tc)],
+        [Paragraph("<code>postman/collections/...</code>", tc_bold), Paragraph("Postman YAML", tc), Paragraph("Exported Postman collection and requests for all 6 modules", tc)]
+    ]
+    t_fs = Table(fs_table_data, colWidths=[2.2 * inch, 1.4 * inch, 3.4 * inch])
+    t_fs.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), c_secondary),
+        ('GRID', (0, 0), (-1, -1), 0.5, c_border),
+        ('ROWBACKGROUNDS', (0, 1), (-1, -1), [c_light_bg, colors.white]),
+        ('TOPPADDING', (0, 0), (-1, -1), 3),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 3),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+    ]))
+    story.append(t_fs)
     story.append(Spacer(1, 6))
 
     # ==================== 7. DEVELOPMENT METHODOLOGY ====================
     story.append(Paragraph("7. Development Methodology", sec_title))
     story.append(Paragraph(
-        "The project was engineered using an <b>Agile, Feature-Driven Iterative Lifecycle</b>. Rather than attempting "
-        "monolithic construction, features were developed in vertical testable slices:",
+        "The project was engineered using an <b>Agile, Feature-Driven Iterative Lifecycle</b>. Features were developed in vertical testable slices:",
         body
     ))
     methodology_bullets = [
@@ -446,26 +435,54 @@ D:\\Healthcare project
     story.append(Paragraph("9. Building & Running", sec_title))
     story.append(Paragraph("Follow these instructions to compile, run, and test the project locally:", body))
 
-    run_text = """
-1. CLONE THE REPOSITORY:
-   git clone https://github.com/nandennagarihaasini/Healthcare.git
-   cd Healthcare/healthcare
-
-2. RUN THE APPLICATION (Using embedded Maven Wrapper):
-   Windows:  .\\mvnw.cmd clean spring-boot:run
-   Linux/Mac: ./mvnw clean spring-boot:run
-
-3. ACCESS ENDPOINTS & DOCUMENTATION:
-   - Base REST API URL:            http://localhost:8080/api/
-   - Interactive Swagger UI:       http://localhost:8080/swagger-ui.html
-   - OpenAPI v3 JSON Schema:       http://localhost:8080/v3/api-docs
-   - H2 In-Memory Database Web:    http://localhost:8080/h2-console
-
-4. AUTHENTICATION CREDENTIALS (Spring Security Basic Auth):
-   - Username: admin
-   - Password: admin123
-    """
-    story.append(Paragraph(f"<pre>{run_text}</pre>", code_box))
+    run_table_data = [
+        [Paragraph("Step", th), Paragraph("Action", th), Paragraph("Command / URL / Details", th)],
+        [
+            Paragraph("<b>Step 1</b>", tc_bold),
+            Paragraph("Clone the Repository", tc),
+            Paragraph("<code>git clone https://github.com/nandennagarihaasini/Healthcare.git<br/>cd Healthcare/healthcare</code>", tc)
+        ],
+        [
+            Paragraph("<b>Step 2</b>", tc_bold),
+            Paragraph("Run Application (Windows)", tc),
+            Paragraph("<code>.\\mvnw.cmd clean spring-boot:run</code>", tc)
+        ],
+        [
+            Paragraph("<b>Step 3</b>", tc_bold),
+            Paragraph("Run Application (Linux/Mac)", tc),
+            Paragraph("<code>./mvnw clean spring-boot:run</code>", tc)
+        ],
+        [
+            Paragraph("<b>Step 4</b>", tc_bold),
+            Paragraph("Interactive Swagger UI", tc),
+            Paragraph("<b>http://localhost:8080/swagger-ui.html</b>", tc)
+        ],
+        [
+            Paragraph("<b>Step 5</b>", tc_bold),
+            Paragraph("Raw OpenAPI JSON", tc),
+            Paragraph("<b>http://localhost:8080/v3/api-docs</b>", tc)
+        ],
+        [
+            Paragraph("<b>Step 6</b>", tc_bold),
+            Paragraph("H2 Database Console", tc),
+            Paragraph("<b>http://localhost:8080/h2-console</b> (JDBC URL: <code>jdbc:h2:mem:healthcare_db</code>)", tc)
+        ],
+        [
+            Paragraph("<b>Step 7</b>", tc_bold),
+            Paragraph("Basic Auth Credentials", tc),
+            Paragraph("Username: <b>admin</b> | Password: <b>admin123</b>", tc)
+        ]
+    ]
+    t_run = Table(run_table_data, colWidths=[0.9 * inch, 2.2 * inch, 3.9 * inch])
+    t_run.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), c_primary),
+        ('GRID', (0, 0), (-1, -1), 0.5, c_border),
+        ('ROWBACKGROUNDS', (0, 1), (-1, -1), [c_light_bg, colors.white]),
+        ('TOPPADDING', (0, 0), (-1, -1), 3.5),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 3.5),
+        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+    ]))
+    story.append(t_run)
     story.append(Spacer(1, 8))
 
     # ==================== 10. CONCLUSION ====================
@@ -478,33 +495,33 @@ D:\\Healthcare project
         body
     ))
     story.append(Paragraph(
-        "<b>Key Takeaways:</b> The modular architecture ensures seamless scalability and maintainability. Future expansions—such as "
-        "JWT token authentication, Role-Based Access Control (RBAC), cloud attachment storage for lab reports, and automated "
-        "payment gateways—can be integrated with zero breaking changes to existing client integrations.",
+        "<b>Key Takeaways:</b> The modular architecture ensures seamless scalability and maintainability. Future expansions—such "
+        "as JWT token authentication, Role-Based Access Control (RBAC), cloud attachment storage for lab reports, and "
+        "automated payment gateways—can be integrated with zero breaking changes to existing client integrations.",
         body
     ))
-    story.append(Spacer(1, 10))
+    story.append(Spacer(1, 8))
 
-    # Sign-off box
+    # Clean sign-off box (no special Unicode characters)
     sign_off_data = [
         [
-            Paragraph("<b>Repository:</b> https://github.com/nandennagarihaasini/Healthcare", tc),
-            Paragraph("<b>Status:</b> Production Ready / Tested ✅", tc)
+            Paragraph("<b>GitHub Repository:</b> https://github.com/nandennagarihaasini/Healthcare", tc),
+            Paragraph("<b>Project Status:</b> Production Ready & Verified [PASS]", tc)
         ]
     ]
     t_sign = Table(sign_off_data, colWidths=[4.8 * inch, 2.2 * inch])
     t_sign.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, -1), c_blue_tint),
         ('BOX', (0, 0), (-1, -1), 1, c_secondary),
-        ('TOPPADDING', (0, 0), (-1, -1), 6),
-        ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
+        ('TOPPADDING', (0, 0), (-1, -1), 5),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 5),
         ('LEFTPADDING', (0, 0), (-1, -1), 10),
         ('RIGHTPADDING', (0, 0), (-1, -1), 10),
     ]))
     story.append(t_sign)
 
     doc.build(story, canvasmaker=ProfessionalCanvas)
-    print("Best PDF built successfully at:", pdf_path)
+    print("Perfect PDF built successfully at:", pdf_path)
 
 if __name__ == "__main__":
     build_pdf()
