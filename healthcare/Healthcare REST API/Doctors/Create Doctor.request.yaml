@@ -1,0 +1,15 @@
+$kind: http-request
+url: http://localhost:8080/api/doctors
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+        "name": "Dr.Haasini",
+        "specialization": "Cardiology",
+        "phone": "9988776655",
+        "email": "dr.Haasini@example.com"
+    }
+order: 1000

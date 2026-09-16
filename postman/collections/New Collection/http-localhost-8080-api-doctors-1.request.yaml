@@ -1,0 +1,43 @@
+$kind: http-request
+name: http://localhost:8080/api/doctors
+description: ""
+url: http://localhost:8080/api/doctors
+method: GET
+body:
+  type: json
+  content: "{\r
+
+    \    \"name\": \"Dr. Haasini\",\r
+
+    \    \"specialization\": \"Neurology\",\r
+
+    \    \"phone\": \"9876543210\",\r
+
+    \    \"email\": \"dr.haasini@hospital.com\"\r
+
+    }"
+  $type: |-
+    {
+        "type": "object",
+        "properties": {
+            "name": {
+                "type": "string"
+            },
+            "specialization": {
+                "type": "string"
+            },
+            "phone": {
+                "type": "string"
+            },
+            "email": {
+                "type": "string",
+                "format": "email"
+            }
+        }
+    }
+auth:
+  type: basic
+  credentials:
+    username: admin
+    password: admin123
+order: 138518935492464

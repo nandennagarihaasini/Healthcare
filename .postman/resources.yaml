@@ -1,0 +1,7 @@
+# Use this workspace to collaborate
+workspace:
+  id: 14f29051-8b01-4b5b-8280-ab84e2d0a6c2
+
+localResources:
+  collections:
+    - ../healthcare/Healthcare REST API

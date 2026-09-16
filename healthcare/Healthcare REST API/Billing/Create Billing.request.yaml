@@ -1,0 +1,14 @@
+$kind: http-request
+url: http://localhost:8080/api/billing
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+        "appointment": {"id": 1},
+        "amount": 1000.00,
+        "status": "PAID"
+    }
+order: 1000

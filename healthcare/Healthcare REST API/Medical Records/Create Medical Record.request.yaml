@@ -1,0 +1,14 @@
+$kind: http-request
+url: http://localhost:8080/api/records
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+        "patient": {"id": 1},
+        "diagnosis": "Mild Angina",
+        "treatment": "Rest and medication"
+    }
+order: 1000

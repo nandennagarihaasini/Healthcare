@@ -1,0 +1,8 @@
+$kind: http-request
+name: http://localhost:8080/api/doctors
+description: ""
+url: http://localhost:8080/api/doctors
+method: GET
+auth:
+  type: basic
+order: 1789205927721

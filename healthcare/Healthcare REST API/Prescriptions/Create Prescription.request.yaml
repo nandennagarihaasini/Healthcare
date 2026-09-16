@@ -1,0 +1,15 @@
+$kind: http-request
+url: http://localhost:8080/api/prescriptions
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+        "appointment": {"id": 1},
+        "medication": "Aspirin",
+        "dosage": "1 tablet",
+        "instructions": "Twice daily after meals"
+    }
+order: 1000

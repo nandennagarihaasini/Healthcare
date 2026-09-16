@@ -1,0 +1,14 @@
+$kind: http-request
+name: " http://localhost:8080/api/appointments"
+description: ""
+url: " http://localhost:8080/api/appointments"
+method: GET
+body:
+  type: json
+  content: ""
+auth:
+  type: basic
+  credentials:
+    username: admin
+    password: admin123
+order: 3282104942440831

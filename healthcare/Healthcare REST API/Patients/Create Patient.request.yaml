@@ -1,0 +1,16 @@
+$kind: http-request
+url: http://localhost:8080/api/patients
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: text
+  content: |-
+    {
+        "name": "Rahul",
+        "dob": "1990-01-01",
+        "gender": "Male",
+        "contact": "9876543210",
+        "address": "New Delhi, India"
+    }
+order: 1000
